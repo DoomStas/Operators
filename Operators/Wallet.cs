@@ -8,48 +8,86 @@ namespace Operators
 {
     public class Wallet
     {
-        private Money[] moneyArray = new Money[0];
+        private Money[] _moneyArray;
+        private int _count;
+
+        public Wallet()
+        {
+            _moneyArray = new Money[10];
+            _count = 0;
+        }
+         public Wallet(int capacity = 10)
+         { 
+            _moneyArray = new Money[capacity];
+            _count = 0;
+        }
+
+        public Wallet (Money[] moneyArray)
+        {
+            _moneyArray = new Money[moneyArray.Length];
+            for (int i = 0; i < moneyArray.Length; i++)
+            {
+                _moneyArray[i] = moneyArray[i];
+            }
+            _count = moneyArray.Length;
+
+        }
+
+        private void EnsureCapacity()
+        {
+            if (_count < _moneyArray.Length)
+            {
+                return;
+            }
+            
+            Money[] newArray = new Money[_moneyArray.Length * 2];
+            for (int i = 0; i < _moneyArray.Length; i++)
+            {
+                newArray[i] = _moneyArray[i];
+            }
+            _moneyArray = newArray;
+            
+        }
 
         public static Wallet operator +(Wallet wallet, Money money)
         {
-            for (int i = 0; i < wallet.moneyArray.Length; i++)
+            for (int i = 0; i < wallet._count; i++)
             {
-                if (wallet.moneyArray[i].GetType() == money.GetType())
+                if (wallet._moneyArray[i].GetType() == money.GetType())
                 {
-                    wallet.moneyArray[i] += money;
+                    wallet._moneyArray[i] += money;
                     return wallet;
                 }
             }
 
-            Money[] newArray = new Money[wallet.moneyArray.Length + 1];
-            for (int i = 0; i < wallet.moneyArray.Length; i++)
-            {
-                newArray[i] = wallet.moneyArray[i];
-            }
-            newArray[newArray.Length - 1] = money;
-            wallet.moneyArray = newArray;
+            wallet.EnsureCapacity();
+
+            wallet._moneyArray[wallet._count] = money;
+            wallet._count++;
             return wallet;
+
         }
 
         public static Wallet operator +(Wallet a, Wallet b)
         {
-            Wallet result = new Wallet();
-            for (int i = 0; i < a.moneyArray.Length; i++)
+            Wallet result = new Wallet(a._count + b._count);
+
+            for (int i = 0; i < a._count; i++)
             {
-                result += a.moneyArray[i];
+                result += a._moneyArray[i];
             }
-            for (int i = 0; i < b.moneyArray.Length; i++)
+            for (int i = 0; i < b._count; i++)
             {
-                result += b.moneyArray[i];
+                result += b._moneyArray[i];
             }
             return result;
         }
         public int GetTotal()
         {
             int sum = 0;
-            for (int i = 0; i < moneyArray.Length; i++)
+            for (int i = 0; i < _count; i++)
             {
-                sum += moneyArray[i].Total;
+                sum += _moneyArray[i].Total;
             }
             return sum;
         }
