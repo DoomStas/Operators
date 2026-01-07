@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Operators
 {
-    public abstract class Money
+    public abstract class Money : IComparable<Money>
     {
         public int Nominal { get; }
         public int Count { get; }
@@ -21,6 +21,15 @@ namespace Operators
         { 
             Nominal = nominal;
             Count = count;
+        }
+
+        public int CompareTo(Money other)
+        { 
+            if (other == null)
+            {
+                return 1;
+            }
+            return Total.CompareTo(other.Total);
         }
 
         public static Money operator +(Money a, Money b)
@@ -87,10 +96,18 @@ namespace Operators
         }
         public static bool operator ==(Money a, Money b)
         {
-            
+            if (a is null && b is null)
+            {
+                return true;
+            }
+            if (a is null || b is null)
+            {
+                return false;
+            }
+
             if (a.GetType() != b.GetType())
             {
-                throw new InvalidOperationException("Cannot compare different types of Money.");
+                return false;
             }
             return a.Total == b.Total;
         }

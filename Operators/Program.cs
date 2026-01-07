@@ -24,6 +24,11 @@
                 Console.WriteLine("Wallet 2 has more money than Wallet 1.");
             }
 
+            wallet1.Sort();
+            Console.WriteLine("Sorted money Walet1: ");
+            wallet1.Print();
+
+
         }
     }
 }

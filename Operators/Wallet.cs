@@ -82,6 +82,19 @@ namespace Operators
             }
             return result;
         }
+
+        public void Sort()
+        { 
+            Array.Sort(_moneyArray, 0, _count);
+        }
+
+        public void Print()
+        { 
+            for (int i = 0; i < _count; i++)
+            {
+                Console.WriteLine($"{_moneyArray[i].GetType().Name}: Nominal = {_moneyArray[i].Nominal}, Count = {_moneyArray[i].Count}, Total = {_moneyArray[i].Total}");
+            }
+        }
         public int GetTotal()
         {
             int sum = 0;
