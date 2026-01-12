@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -83,17 +84,24 @@ namespace Operators
             return result;
         }
 
-        public void Sort()
+        public void Sort(SortMode sortMode)
         { 
-            Array.Sort(_moneyArray, 0, _count);
+            MoneyComparer comparer = new MoneyComparer(sortMode);
+            Array.Sort(_moneyArray, 0, _count, comparer);
+
         }
 
-        public void Print()
+        public string Print()
         { 
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < _count; i++)
             {
-                Console.WriteLine($"{_moneyArray[i].GetType().Name}: Nominal = {_moneyArray[i].Nominal}, Count = {_moneyArray[i].Count}, Total = {_moneyArray[i].Total}");
+                for (int j = 0; j < _moneyArray[i].Count; j++)
+                {
+                    sb.AppendLine(_moneyArray[i].Nominal.ToString());
+                }
             }
+            return sb.ToString();
         }
         public int GetTotal()
         {
@@ -113,5 +121,6 @@ namespace Operators
         {
             return a.GetTotal() < b.GetTotal();
         }
+   
     }
 }

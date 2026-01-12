@@ -25,10 +25,7 @@ namespace Operators
 
         public int CompareTo(Money other)
         { 
-            if (other == null)
-            {
-                return 1;
-            }
+
             return Total.CompareTo(other.Total);
         }
 
@@ -96,15 +93,6 @@ namespace Operators
         }
         public static bool operator ==(Money a, Money b)
         {
-            if (a is null && b is null)
-            {
-                return true;
-            }
-            if (a is null || b is null)
-            {
-                return false;
-            }
-
             if (a.GetType() != b.GetType())
             {
                 return false;
