@@ -120,5 +120,7 @@ namespace Operators
             return Total.GetHashCode();
         }
         protected abstract Money CreateNew(int count);
+
+ 
     }
 }

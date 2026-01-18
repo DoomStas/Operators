@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Operators
 {
-    public class Wallet
+    public class Wallet : IList
     {
         private Money[] _moneyArray;
         private int _count;
@@ -49,6 +49,100 @@ namespace Operators
             _moneyArray = newArray;
             
         }
+        // ++++++++++++++++++ILIST+++++++++++++++++++++
+
+        public int Add(object value)
+        {
+            EnsureCapacity();
+            _moneyArray[_count] = (Money)value;
+            _count++;
+            return _count - 1;
+        }
+
+        public void Insert(int index, object value)
+        {
+            EnsureCapacity();
+            for (int i = _count; i > index; i--)
+            {
+                _moneyArray[i] = _moneyArray[i - 1];
+            }
+            _moneyArray[index] = (Money)value;
+            _count++;
+        }
+
+        public void Remove(object value)
+        {
+            int index = IndexOf(value);
+            if (index >= 0)
+            {
+                RemoveAt(index);
+            }
+        }
+        public void RemoveAt(int index)
+        {
+            for (int i = index; i < _count - 1; i++)
+            {
+                _moneyArray[i] = _moneyArray[i + 1];
+            }
+            _moneyArray[_count - 1] = null;
+            _count--;
+        }
+
+        public bool Contains(object value)
+        {
+            return IndexOf(value) >= 0;
+        }
+
+        public int IndexOf(object value)
+        {
+            if (value is not Money)
+            { 
+                return -1;
+            }
+            for (int i = 0; i < _count; i++)
+            {
+                if (_moneyArray[i].Equals(value))
+                    return i;
+            }
+            return -1;
+        }
+
+        public object this[int index]
+        {
+            get { return _moneyArray[index]; }
+            set { _moneyArray[index] = (Money)value; }
+        }
+
+        public void Clear()
+        {
+            for (int i = 0; i < _count; i++)
+            {
+                _moneyArray[i] = null;
+            }
+            _count = 0;
+        }
+
+        public void CopyTo(Array array, int index)
+        {
+            for (int i = 0; i < _count; i++)
+            {
+                array.SetValue(_moneyArray[i], index + i);
+            }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return new WalletEnumerator(_moneyArray, _count);
+        }
+
+
+        public bool IsFixedSize => false;
+        public bool IsReadOnly => false;
+        public int Count => _count;
+        public bool IsSynchronized => false;
+        public object SyncRoot => this;
+        // ++++++++++++++++++ILIST+++++++++++++++++++++
+
 
         public static Wallet operator +(Wallet wallet, Money money)
         {
@@ -84,9 +178,9 @@ namespace Operators
             return result;
         }
 
-        public void Sort(SortMode sortMode)
+        public void Sort(IComparer comparer)
         { 
-            MoneyComparer comparer = new MoneyComparer(sortMode);
+            
             Array.Sort(_moneyArray, 0, _count, comparer);
 
         }
@@ -121,6 +215,7 @@ namespace Operators
         {
             return a.GetTotal() < b.GetTotal();
         }
+
    
     }
 }

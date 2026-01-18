@@ -8,6 +8,7 @@ namespace Operators
 {
     public enum SortMode
     {
+        None,
         Ascending,
         Descending
     }
